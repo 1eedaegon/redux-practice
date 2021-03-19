@@ -1,9 +1,18 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
+const plus = document.querySelector('#plus')
+const minus = document.querySelector('#minus')
+const number = document.querySelector('span')
 
-ReactDOM.render(
-    <App />,
-  document.getElementById('root')
-);
+let count = 0;
 
+plus.addEventListener('click', ()=>{
+  (()=>{
+    count = count+1;
+    number.innerText=count;
+  })()
+})
+minus.addEventListener('click', ()=>{
+  (()=>{
+    count = count-1;
+    number.innerText=count;
+  })()
+})
