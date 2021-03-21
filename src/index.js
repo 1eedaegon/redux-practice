@@ -1,36 +1,29 @@
-import {createStore} from "redux";
+const { createStore } = require("redux");
 
-const plus = document.querySelector('#plus')
-const minus = document.querySelector('#minus')
-const number = document.querySelector('span')
+const form = document.querySelector('form');
+const input = document.querySelector('input');
+const ul = document.querySelector('ul');
 
-number.innerText = 0;
-const PLUS = 'plus'
-const MINUS = 'minus'
+const ADD_TODO = "ADD_TODO";
+const DEL_TODO = "DEL_TODO";
+const DATE = Date.now();
 
-// Counter reducer  
-const counterModifier = (count=0, actions) => {
-  switch(actions.type) {
-    case PLUS:
-      return count + 1;
-    case MINUS:
-      return count - 1;
+const reducer = (state = [], actions) => {
+  switch (actions.type) {
+    case ADD_TODO:
+      return [...state, { text: actions.payload, id: DATE }];
+    case DEL_TODO:
+      return state.filter(todo => todo.id !== actions.payload.id)
     default:
-      return count;
+      return state;
   }
+};
+const store = createStore(reducer);
+const addTodo = (text) => store.dispatch({ type: ADD_TODO, payload: text })
+const handleSubmit = event => {
+  event.preventDefault();
+  const toDo = input.value;
+  input.value = "";
+  addTodo(toDo);
 }
-const counterStore = createStore(counterModifier);
-const counterOnChange = () => {
-  number.innerText = counterStore.getState()
-}
-const handlePlus = () => {
-  counterStore.dispatch({type: PLUS})
-}
-const handleMinus = () => {
-  counterStore.dispatch({type: MINUS})
-}
-counterStore.subscribe(counterOnChange)
-
-
-plus.addEventListener('click', handlePlus)
-minus.addEventListener('click', handleMinus)
+form.addEventListener('click', handleSubmit)
