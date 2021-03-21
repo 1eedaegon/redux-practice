@@ -5,26 +5,29 @@ const minus = document.querySelector('#minus')
 const number = document.querySelector('span')
 
 number.innerText = 0;
-// Counter reducer
+const PLUS = 'plus'
+const MINUS = 'minus'
+
+// Counter reducer  
 const counterModifier = (count=0, actions) => {
-  console.log(count, actions);
-  if( actions.type === "PLUS" ) {
-    return count + 1;
+  switch(actions.type) {
+    case PLUS:
+      return count + 1;
+    case MINUS:
+      return count - 1;
+    default:
+      return count;
   }
-  if( actions.type === "MINUS") { 
-    return count - 1;
-  }
-  return count;
 }
 const counterStore = createStore(counterModifier);
 const counterOnChange = () => {
   number.innerText = counterStore.getState()
 }
 const handlePlus = () => {
-  counterStore.dispatch({type: "PLUS"})
+  counterStore.dispatch({type: PLUS})
 }
 const handleMinus = () => {
-  counterStore.dispatch({type: "MINUS"})
+  counterStore.dispatch({type: MINUS})
 }
 counterStore.subscribe(counterOnChange)
 
