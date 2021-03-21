@@ -17,9 +17,11 @@ const delTodo = (id) => {
 const reducer = (state = [], actions) => {
   switch (actions.type) {
     case ADD_TODO:
-      return [...state, { text: actions.text, id: Date.now() }];
+      const newTodoObj = { text: actions.text, id: Date.now() };
+      return [...state, newTodoObj];
     case DEL_TODO:
-      return state.filter(todo => todo.id !== parseInt(actions.id))
+      const cleanedState = state.filter(todo => todo.id !== parseInt(actions.id));
+      return cleanedState;
     default:
       return state;
   }
@@ -29,7 +31,7 @@ const dispatchAddTodo = (text) => {
   store.dispatch(addTodo(text))
 }
 const dispatchDelTodo = (e) => {
-  const id = e.target.parentNode.id;
+  const id = parseInt(e.target.parentNode.id);
   store.dispatch(delTodo(id))
 }
 const drawTodo = () => {
