@@ -6,24 +6,51 @@ const ul = document.querySelector('ul');
 
 const ADD_TODO = "ADD_TODO";
 const DEL_TODO = "DEL_TODO";
-const DATE = Date.now();
+
+const addTodo = (text) => {
+  return { type: ADD_TODO,  text }
+}
+const delTodo = (id) => {
+  return { type: DEL_TODO, id}
+}
 
 const reducer = (state = [], actions) => {
   switch (actions.type) {
     case ADD_TODO:
-      return [...state, { text: actions.payload, id: DATE }];
+      return [...state, { text: actions.text, id: Date.now() }];
     case DEL_TODO:
-      return state.filter(todo => todo.id !== actions.payload.id)
+      return state.filter(todo => todo.id !== parseInt(actions.id))
     default:
       return state;
   }
 };
 const store = createStore(reducer);
-const addTodo = (text) => store.dispatch({ type: ADD_TODO, payload: text })
+const dispatchAddTodo = (text) => {
+  store.dispatch(addTodo(text))
+}
+const dispatchDelTodo = (e) => {
+  const id = e.target.parentNode.id;
+  store.dispatch(delTodo(id))
+}
+const drawTodo = () => {
+  const toDos = store.getState();
+  ul.innerHTML = "";
+  toDos.forEach(toDo => {
+    const li = document.createElement('li');
+    const btn = document.createElement('button')
+    btn.innerText = " Delete ";
+    btn.addEventListener("click", dispatchDelTodo);
+    li.id = toDo.id;
+    li.innerText = toDo.text;
+    li.appendChild(btn);
+    ul.appendChild(li);
+  })
+}
+store.subscribe(drawTodo);
 const handleSubmit = event => {
   event.preventDefault();
   const toDo = input.value;
   input.value = "";
-  addTodo(toDo);
+  dispatchAddTodo(toDo);
 }
-form.addEventListener('click', handleSubmit)
+form.addEventListener('submit', handleSubmit)
